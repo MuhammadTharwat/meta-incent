@@ -28,7 +28,6 @@ create_fitimage() {
         ${IMAGE_FITIMAGE_WORKDIR}/fitImage \
         ${DEPLOY_DIR_IMAGE}/u-boot/linux.bin \
         "${FITIMAGE_UBOOT_SCRIPT}" \
-        "${FITIMAGE_SETUP}" \
         "${DEPLOY_DIR_IMAGE}/${INITRAMFS_FILE}"
 
     # Install fitimage

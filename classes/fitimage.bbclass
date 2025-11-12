@@ -10,7 +10,6 @@
 #     FITIMAGE      Output fitimage
 #     KERNEL        Input kernel image
 #     UBOOT-SCRIPT  Input u-boot script
-#     SETUP         Input setup file (x86)
 #     INITRAMFS     Input initramfs image
 #
 # Input variables:
@@ -363,8 +362,7 @@ dtb_is_overlay() {
 # $2 ... fitImage name
 # $3 ... u-boot prepared kernel image
 # $4 ... u-boot script
-# $5 ... optional kernel setup (x86)
-# $6 ... optional ramdisk
+# $5 ... optional ramdisk
 fitimage_assemble() {
 	local its=$1
 	local image=$2
@@ -428,7 +426,7 @@ fitimage_assemble() {
 	fi
 
 	#
-	# Step 5: Prepare a ramdisk section.
+	# Step 4: Prepare a ramdisk section.
 	#
 	[ -n "$ramdisk_id" ] && fitimage_emit_section_ramdisk $its 1 $ramdisk
 
@@ -440,7 +438,7 @@ fitimage_assemble() {
 	[ -n "${ramdisk}" ] && ramdiskcount=1
 
 	#
-	# Step 6: Prepare a configurations section
+	# Step 5: Prepare a configurations section
 	#
 	fitimage_emit_section_maint $its confstart
 
