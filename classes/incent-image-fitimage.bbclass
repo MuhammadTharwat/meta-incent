@@ -2,9 +2,7 @@
 #
 # Customizations are added to the final rootfs:
 #   - Add the partition table to the initramfs image
-#   - Add swk2 to the initramfs image (if enabled)
 #   - Package the kernel, device trees, initramfs
-#   - Sign the FIT image with swk1 (if enabled)
 
 inherit fitimage
 
