@@ -24,7 +24,7 @@ create_fitimage() {
     fitimage_assemble \
         ${IMAGE_FITIMAGE_WORKDIR}/fit-image.its \
         ${IMAGE_FITIMAGE_WORKDIR}/fitImage \
-        ${DEPLOY_DIR_IMAGE}/u-boot/linux.bin \
+        ${DEPLOY_DIR_IMAGE}/kernel-fit/linux.bin \
         "${FITIMAGE_UBOOT_SCRIPT}" \
         "${DEPLOY_DIR_IMAGE}/${INITRAMFS_FILE}"
 

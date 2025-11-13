@@ -2,6 +2,8 @@
 
 inherit core-image
 
+IMAGE_NAME = "${IMAGE_BASENAME}-${MACHINE}"
+
 IMAGE_INSTALL:append = " openssh openssh-sshd openssh-sftp openssh-sftp-server"
 IMAGE_INSTALL:append = " kernel-modules"
 IMAGE_INSTALL:append = " libstdc++"
