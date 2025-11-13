@@ -11,9 +11,7 @@ INITRAMFS_FILE = "${INITRAMFS_IMAGE}-${MACHINE}.${INITRAMFS_FSTYPES}"
 EXTENDED_INITRAMFS_FILE = "${IMAGE_LINK_NAME}-${INITRAMFS_IMAGE}-${MACHINE}-extended.${INITRAMFS_FSTYPES}"
 
 #   FITIMAGE_UBOOT_SCRIPT  Path to U-Boot script to be integrated (optional)
-#   FITIMAGE_SETUP         Path to setup.bin to be integrated (optional)
 FITIMAGE_UBOOT_SCRIPT ?= ""
-FITIMAGE_SETUP ?= ""
 
 IMAGE_FITIMAGE_WORKDIR = "${WORKDIR}/fitimage"
 ROOTFS_POSTPROCESS_COMMAND += "create_fitimage"
@@ -45,7 +43,11 @@ do_deploy_fitimage() {
     bbnote "Installing fitImage file..."
     install -m 0644 ${IMAGE_FITIMAGE_WORKDIR}/fitImage "${IMGDEPLOYDIR}/${IMAGE_NAME}.fitimage.itb"
     ln -snf ${IMAGE_NAME}.fitimage.itb "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.fitimage.itb"
+
+    ## Link the fitImage inside the deploy directory searched for boot files
+    ln -snf ${IMGDEPLOYDIR}/${IMAGE_NAME}.fitimage.itb "${DEPLOY_DIR_IMAGE}/fitImage"
 }
 
 addtask deploy_fitimage after do_rootfs before do_image_complete
+
 
