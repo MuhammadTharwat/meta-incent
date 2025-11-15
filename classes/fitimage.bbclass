@@ -192,33 +192,6 @@ EOF
 }
 
 #
-# Emit the fitImage ITS setup section
-#
-# $1 ... .its filename
-# $2 ... Image counter
-# $3 ... Path to setup image
-fitimage_emit_section_setup() {
-
-	setup_csum="${FITIMAGE_HASH_ALG}"
-
-	cat << EOF >> $1
-                setup-$2 {
-                        description = "Linux setup.bin";
-                        data = /incbin/("$3");
-                        type = "x86_setup";
-                        arch = "${UBOOT_ARCH}";
-                        os = "linux";
-                        compression = "none";
-                        load = <0x00090000>;
-                        entry = <0x00090000>;
-                        hash-1 {
-                                algo = "$setup_csum";
-                        };
-                };
-EOF
-}
-
-#
 # Emit the fitImage ITS ramdisk section
 #
 # $1 ... .its filename
@@ -285,7 +258,6 @@ fitimage_emit_section_config() {
 	local kernel_line=""
 	local fdt_line=""
 	local ramdisk_line=""
-	local setup_line=""
 	local default_line=""
 
 	# conf node name is selected based on dtb ID if it is present,
@@ -320,11 +292,6 @@ fitimage_emit_section_config() {
 		bootscr_line="bootscr = \"bootscr-$bootscr_id\";"
 	fi
 
-	if [ -n "$config_id" ]; then
-		conf_desc="$conf_desc${sep}setup"
-		setup_line="setup = \"setup-$config_id\";"
-	fi
-
 	if [ "$configcount" = "1" ]; then
 		if [ -n "$dtb_image" ]; then
 			default_line="default = \"conf-$dtb_image\";"
@@ -341,7 +308,6 @@ fitimage_emit_section_config() {
                         $fdt_line
                         $ramdisk_line
                         $bootscr_line
-                        $setup_line
 EOF
 	cat << EOF >> $its_file
                 };
