@@ -14,9 +14,9 @@ EXTENDED_INITRAMFS_FILE = "${IMAGE_LINK_NAME}-${INITRAMFS_IMAGE}-${MACHINE}-exte
 FITIMAGE_UBOOT_SCRIPT ?= ""
 
 IMAGE_FITIMAGE_WORKDIR = "${WORKDIR}/fitimage"
-ROOTFS_POSTPROCESS_COMMAND += "create_fitimage"
+#ROOTFS_POSTPROCESS_COMMAND += "create_fitimage"
 
-create_fitimage() {
+do_create_fitimage() {
     mkdir -p "${IMAGE_FITIMAGE_WORKDIR}"
     # Assemble fitimage
     fitimage_assemble \
@@ -48,6 +48,6 @@ do_deploy_fitimage() {
     ln -snf ${IMGDEPLOYDIR}/${IMAGE_NAME}.fitimage.itb "${DEPLOY_DIR_IMAGE}/fitImage"
 }
 
-addtask deploy_fitimage after do_rootfs before do_image_complete
-
+addtask deploy_fitimage after do_create_fitimage before do_image_complete
+addtask do_create_fitimage after do_rootfs 
 

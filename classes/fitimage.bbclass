@@ -32,7 +32,7 @@
 #   - KERNEL
 #   - KERNEL.comp
 
-inherit kernel-arch
+inherit kernel-arch kernel-uboot
 
 DEPENDS += "dtc-native u-boot-tools-native"
 
