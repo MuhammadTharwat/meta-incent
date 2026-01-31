@@ -1,3 +1,6 @@
+IMAGE_INSTALL:append = " mender-client"
+DEPENDS += " mender-artifact-native"
+
 FIT_PARTITION_SIZE ??= "32768"
 do_kernel_version_tester() {
     
@@ -13,21 +16,20 @@ do_kernel_version_tester() {
 
 do_create_fit_partitions() {
 
-    if [ -e ${DEPLOY_DIR_IMAGE}/FIT_PART_A ]
+    if [ -e ${DEPLOY_DIR_IMAGE}/FIT_PART ]
     then
-        rm ${DEPLOY_DIR_IMAGE}/FIT_PART_A
+        rm ${DEPLOY_DIR_IMAGE}/FIT_PART
     fi
 
-    mkdosfs -n FIT_A -C ${DEPLOY_DIR_IMAGE}/FIT_PART_A ${FIT_PARTITION_SIZE}
-    mcopy -v -i ${DEPLOY_DIR_IMAGE}/FIT_PART_A -s ${DEPLOY_DIR_IMAGE}/fitImage ::/
+    mkdosfs -n FIT -C ${DEPLOY_DIR_IMAGE}/FIT_PART ${FIT_PARTITION_SIZE}
+    mcopy -v -i ${DEPLOY_DIR_IMAGE}/FIT_PART -s ${DEPLOY_DIR_IMAGE}/fitImage ::/
 
-    if [ -e ${DEPLOY_DIR_IMAGE}/FIT_PART_B ]
-    then
-        rm ${DEPLOY_DIR_IMAGE}/FIT_PART_B
-    fi
-
-    mkdosfs -n FIT_B -C ${DEPLOY_DIR_IMAGE}/FIT_PART_B  ${FIT_PARTITION_SIZE}
-    mcopy -v -i ${DEPLOY_DIR_IMAGE}/FIT_PART_B -s ${DEPLOY_DIR_IMAGE}/fitImage ::/
+    mender-artifact write module-image \
+    -t mt-rpi0-w \
+    -o ${DEPLOY_DIR_IMAGE}/FIT_PART.mender \
+    -T fit_update \
+    -n fit_update-1.0 \
+    -f ${DEPLOY_DIR_IMAGE}/FIT_PART
 }
 
 do_create_peristant_data_partitions() {

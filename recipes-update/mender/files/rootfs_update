@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+STATE="$1"
+FILES="$2"
+
+case "$STATE" in
+    ArtifactInstall)
+    	mkdir -p /var/update
+        cp "$FILES"/files/* /var/update
+        ;;
+esac
+exit 0

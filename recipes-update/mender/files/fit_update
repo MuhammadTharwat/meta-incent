@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+STATE="$1"
+FILES="$2"
+
+case "$STATE" in
+    ArtifactInstall)
+        dd if="$FILES"/files/FIT_PART of=/dev/mmcblk0p3 bs=4MB
+        ;;
+esac
+exit 0
