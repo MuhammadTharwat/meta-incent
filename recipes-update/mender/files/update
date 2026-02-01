@@ -6,21 +6,60 @@ STATE="$1"
 FILES="$2"
 
 case "$STATE" in
+	SupportsRollback)
+        echo "Yes"
+        ;;
     ArtifactInstall)
 	if [ -e "$FILES"/files/FIT_PART ]
 	then
 		echo "Updating FIT"
-        	dd if="$FILES"/files/FIT_PART of=/dev/mmcblk0p3 bs=4MB
+        target_update.sh fit install_update "$FILES"/files/FIT_PART
 	elif [ -e "$FILES"/files/ROOTFS_PART ]
 	then 
 		echo "Updating RootFs"
+		target_update.sh rootfs install_update "$FILES"/files/ROOTFS_PART
 	elif [ -e "$FILES"/files/FULL_SYSTEM ]
 	then 
 		echo "Updating the whole system"
 	else 
 		echo "Invalid Module"
 	fi
+    ;;
+
+	ArtifactCommit)
+	if [ -e "$FILES"/files/FIT_PART ]
+	then
+		echo "Committing FIT"
+        target_update.sh fit confirm_update
+	elif [ -e "$FILES"/files/ROOTFS_PART ]
+	then 
+		echo "Committing RootFs"
+		target_update.sh rootfs confirm_update
+	elif [ -e "$FILES"/files/FULL_SYSTEM ]
+	then 
+		echo "Updating the whole system"
+	else 
+		echo "Invalid Module"
+	fi
+	;;
+
+	ArtifactRollback)
+	if [ -e "$FILES"/files/FIT_PART ]
+	then
+		echo "Cancelling FIT"
+        target_update.sh fit cancel_update
+	elif [ -e "$FILES"/files/ROOTFS_PART ]
+	then 
+		echo "Cancelling RootFs"
+		target_update.sh rootfs cancel_update
+	elif [ -e "$FILES"/files/FULL_SYSTEM ]
+	then 
+		echo "Updating the whole system"
+	else 
+		echo "Invalid Module"
+	fi
+	;;
+
 	
-        ;;
 esac
 exit 0
