@@ -27,8 +27,8 @@ do_create_fit_partitions() {
     mender-artifact write module-image \
     -t mt-rpi0-w \
     -o ${DEPLOY_DIR_IMAGE}/FIT_PART.mender \
-    -T fit_update \
-    -n fit_update-1.0 \
+    -T update \
+    -n system_update \
     -f ${DEPLOY_DIR_IMAGE}/FIT_PART
 }
 
