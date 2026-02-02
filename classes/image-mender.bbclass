@@ -32,6 +32,16 @@ do_create_fit_partitions() {
     -f ${DEPLOY_DIR_IMAGE}/FIT_PART
 }
 
+do_create_rootfs_partitions() {
+    
+    mender-artifact write module-image \
+    -t mt-rpi0-w \
+    -o ${DEPLOY_DIR_IMAGE}/ROOTFS_PART.mender \
+    -T update \
+    -n system_update \
+    -f ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.ext4
+}
+
 do_create_peristant_data_partitions() {
     if [ -e ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA ]
     then
@@ -40,6 +50,25 @@ do_create_peristant_data_partitions() {
     mkdosfs -n data -C ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA 8192
 }
 
+python do_clean:append() {
+    import shutil
+    import os
+    
+    deploy_dir = d.getVar('DEPLOY_DIR_IMAGE')
+    rootfs_path = os.path.join(deploy_dir, 'ROOTFS_PART.mender')
+    if os.path.exists(rootfs_path):
+        os.remove(rootfs_path)
+
+    fit_path = os.path.join(deploy_dir, 'FIT_PART.mender')
+    if os.path.exists(fit_path):
+        os.remove(fit_path)
+
+    fit_path = os.path.join(deploy_dir, 'FIT_PART')
+    if os.path.exists(fit_path):
+        os.remove(fit_path)
+}
+
+
 PARTITION_CREATION_DEP =   "dosfstools-native:do_populate_sysroot \
                             mtools-native:do_populate_sysroot \
                             ${PN}:do_deploy_fitimage \
@@ -47,12 +76,15 @@ PARTITION_CREATION_DEP =   "dosfstools-native:do_populate_sysroot \
 
 do_create_peristant_data_partitions[depends] += "${PARTITION_CREATION_DEP}"
 do_create_fit_partitions[depends] += "${PARTITION_CREATION_DEP}"
+do_create_rootfs_partitions[depends] += "${PARTITION_CREATION_DEP}"
 do_kernel_version_tester[depends] += "${PARTITION_CREATION_DEP}"
 
 do_image_wic[depends] += "${PN}:do_kernel_version_tester \
                             ${PN}:do_create_fit_partitions \
                             ${PN}:do_create_peristant_data_partitions"
 
+
 addtask do_kernel_version_tester  
 addtask do_create_fit_partitions 
+addtask do_create_rootfs_partitions after do_image_complete before do_build
 addtask do_create_peristant_data_partitions

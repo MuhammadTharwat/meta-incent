@@ -12,3 +12,5 @@ IMAGE_INSTALL:append = " packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL}"
 
 IMAGE_CLASSES += "incent-image-fitimage" 
 IMAGE_CLASSES += "image-mender"
+
+IMAGE_FSTYPES += "ext4"
