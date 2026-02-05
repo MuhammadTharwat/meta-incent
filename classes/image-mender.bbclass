@@ -1,7 +1,9 @@
 IMAGE_INSTALL:append = " mender-client"
 DEPENDS += " mender-artifact-native"
 
-FIT_PARTITION_SIZE ??= "32768"
+FIT_PARTITION_SIZE_KB ??= "32768"
+DATA_PARTITION_SIZE_KB ??= "1048576"
+
 do_kernel_version_tester() {
     
     echo Image1 > ${DEPLOY_DIR_IMAGE}/kernel_tester.txt
@@ -21,7 +23,7 @@ do_create_fit_partitions() {
         rm ${DEPLOY_DIR_IMAGE}/FIT_PART
     fi
 
-    mkdosfs -n FIT -C ${DEPLOY_DIR_IMAGE}/FIT_PART ${FIT_PARTITION_SIZE}
+    mkdosfs -n FIT -C ${DEPLOY_DIR_IMAGE}/FIT_PART ${FIT_PARTITION_SIZE_KB}
     mcopy -v -i ${DEPLOY_DIR_IMAGE}/FIT_PART -s ${DEPLOY_DIR_IMAGE}/fitImage ::/
 
     mender-artifact write module-image \
@@ -34,20 +36,23 @@ do_create_fit_partitions() {
 
 do_create_rootfs_partitions() {
     
+    ln -sf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.ext4 ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
     mender-artifact write module-image \
     -t mt-rpi0-w \
     -o ${DEPLOY_DIR_IMAGE}/ROOTFS_PART.mender \
     -T update \
     -n system_update \
-    -f ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.ext4
+    -f ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
 }
 
 do_create_peristant_data_partitions() {
-    if [ -e ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA ]
+    if [ -e ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA.ext4 ]
     then
-        rm ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA
+        rm ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA.ext4
     fi
-    mkdosfs -n data -C ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA 8192
+
+    truncate -s ${DATA_PARTITION_SIZE_KB}K ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA.ext4
+    mkfs.ext4 -L data ${DEPLOY_DIR_IMAGE}/PERSISTANT_DATA.ext4
 }
 
 python do_clean:append() {
