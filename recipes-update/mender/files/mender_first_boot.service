@@ -1,0 +1,13 @@
+# /etc/systemd/system/mender_first_boot.service
+[Unit]
+Description=First Mender boot setup after fstab
+After=local-fs.target
+ConditionPathExists=!/data/mender
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mender_first_boot.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

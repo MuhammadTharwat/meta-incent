@@ -14,3 +14,9 @@ IMAGE_CLASSES += "incent-image-fitimage"
 IMAGE_CLASSES += "image-mender"
 
 IMAGE_FSTYPES += "ext4"
+
+create_data_dir() {
+   mkdir -p ${IMAGE_ROOTFS}/data
+}
+
+IMAGE_PREPROCESS_COMMAND += "create_data_dir;"
