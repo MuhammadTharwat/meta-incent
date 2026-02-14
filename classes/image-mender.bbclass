@@ -5,6 +5,7 @@ DEPENDS += " mender-artifact-native"
 
 FIT_PARTITION_SIZE_KB ??= "32768"
 DATA_PARTITION_SIZE_KB ??= "1048576"
+ROOTFS_POSTPROCESS_COMMAND:remove = "mender_update_fstab_file"
 
 do_kernel_version_tester() {
     

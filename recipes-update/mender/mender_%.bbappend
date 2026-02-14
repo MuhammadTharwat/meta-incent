@@ -25,6 +25,10 @@ do_install:append() {
 
 }
 
+
+SYSTEMD_AUTO_ENABLE = "enable"
+SYSTEMD_SERVICE:${PN}:append = " mender_first_boot.service "
+
 FILES:${PN} += "\
     ${datadir}/mender/modules/v3/update \
     ${bindir}/mender_first_boot.sh \
