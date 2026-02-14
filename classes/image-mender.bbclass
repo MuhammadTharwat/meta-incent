@@ -1,4 +1,6 @@
-IMAGE_INSTALL:append = " mender-client"
+IMAGE_INSTALL:append = " mender-connect"
+SYSTEMD_AUTO_ENABLE:pn-mender-connect = "enable"
+
 DEPENDS += " mender-artifact-native"
 
 FIT_PARTITION_SIZE_KB ??= "32768"
@@ -36,6 +38,11 @@ do_create_fit_partitions() {
 
 do_create_rootfs_partitions() {
     
+    if [ -e ${DEPLOY_DIR_IMAGE}/ROOTFS_PART ]
+    then
+        rm ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
+    fi
+
     ln -sf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.ext4 ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
     mender-artifact write module-image \
     -t mt-rpi0-w \
@@ -43,6 +50,8 @@ do_create_rootfs_partitions() {
     -T update \
     -n system_update \
     -f ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
+
+    rm ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
 }
 
 do_create_peristant_data_partitions() {

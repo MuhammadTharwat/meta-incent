@@ -42,7 +42,6 @@ do_deploy_fitimage() {
 
     bbnote "Installing fitImage file..."
     install -m 0644 ${IMAGE_FITIMAGE_WORKDIR}/fitImage "${IMGDEPLOYDIR}/${IMAGE_NAME}.fitimage.itb"
-    ln -snf ${IMAGE_NAME}.fitimage.itb "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.fitimage.itb"
 
     ## Link the fitImage inside the deploy directory searched for boot files
     ln -snf ${IMGDEPLOYDIR}/${IMAGE_NAME}.fitimage.itb "${DEPLOY_DIR_IMAGE}/fitImage"
