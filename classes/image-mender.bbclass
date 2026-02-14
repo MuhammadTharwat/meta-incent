@@ -1,4 +1,4 @@
-IMAGE_INSTALL:append = " mender-connect"
+IMAGE_INSTALL:append = " mender mender-connect"
 SYSTEMD_AUTO_ENABLE:pn-mender-connect = "enable"
 
 DEPENDS += " mender-artifact-native"
