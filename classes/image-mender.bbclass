@@ -33,7 +33,7 @@ do_create_fit_partitions() {
     -t mt-rpi0-w \
     -o ${DEPLOY_DIR_IMAGE}/FIT_PART.mender \
     -T update \
-    -n system_update \
+    -n fit_update \
     -f ${DEPLOY_DIR_IMAGE}/FIT_PART
 }
 
@@ -49,7 +49,7 @@ do_create_rootfs_partitions() {
     -t mt-rpi0-w \
     -o ${DEPLOY_DIR_IMAGE}/ROOTFS_PART.mender \
     -T update \
-    -n system_update \
+    -n rootfs_update \
     -f ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
 
     rm ${DEPLOY_DIR_IMAGE}/ROOTFS_PART
